@@ -22,20 +22,19 @@ namespace PIS_6sem
 
             try
             {
-                var answers = RuleSurvey.Ask();
-
-                Console.WriteLine();
-                Screen.Progress("Сохраняем правило…");
-
-                // База и сервис нужны только для сохранения, поэтому создаются после опроса.
                 using var dbContext = new RuleDbContext();
                 dbContext.Database.EnsureCreated();
 
                 var ruleService = new RuleService(new UnitOfWork(dbContext), new RuleDirector());
+                var answers = RuleSurvey.Ask(ruleService);
+
+                Console.WriteLine();
+                Screen.Progress("Сохраняем правило…");
                 var rule = ruleService.CreateRule(
                     answers.RuleName, answers.TargetDocumentNames,
                     answers.GuidanceDescription, answers.Refusal,
                     answers.OrganizationNames, answers.OrganizationAddresses,
+                    answers.RequiredRuleIds,
                     answers.ProfileDays, answers.ProfileEntryPurposes, answers.ProfileCitizenships,
                     answers.ProfilePropertyNames, answers.ProfilePropertyValues);
 
@@ -50,6 +49,8 @@ namespace PIS_6sem
             {
                 Console.WriteLine();
                 Screen.Error($"Не удалось сохранить правило: {exception.InnerException?.Message ?? exception.Message}");
+                Screen.Hint("Если файл rules.db остался от прошлой версии программы, удалите его:");
+                Screen.Hint("структура базы изменилась, и программа создаст новую");
             }
 
             Screen.WaitForExit();

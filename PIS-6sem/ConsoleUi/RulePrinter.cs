@@ -21,6 +21,8 @@ namespace PIS_6sem.ConsoleUi
                 PrintField("Что стоит попробовать при отказе", [rule.Guidance.Refusal]);
             }
 
+            PrintField("Зависит от", rule.RequiredAccomplishedRules?.Select(required => $"#{required.Id} {required.Name}") ?? []);
+
             Screen.Label("Профили");
             Screen.Hint("Правило действует, если мигрант подходит хотя бы под один");
             int number = 1;

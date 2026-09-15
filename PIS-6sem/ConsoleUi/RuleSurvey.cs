@@ -1,11 +1,13 @@
-﻿namespace PIS_6sem.ConsoleUi
+﻿using PIS_6sem.Services;
+
+namespace PIS_6sem.ConsoleUi
 {
     // Опрос о новом правиле. Шаги повторяют колонки таблицы ТЗ «Дорожная карта».
     public static class RuleSurvey
     {
-        private const int StepCount = 3;
+        private const int StepCount = 4;
 
-        public static RuleSurveyAnswers Ask()
+        public static RuleSurveyAnswers Ask(RuleService ruleService)
         {
             Screen.Step(1, StepCount, "Что нужно получить");
             string ruleName = Prompt.Text(
@@ -30,7 +32,10 @@
                 "Enter — пропустить",
                 isRequired: false);
 
-            Screen.Step(3, StepCount, "Для кого и в какой срок");
+            Screen.Step(3, StepCount, "Зависимость от других правил");
+            var requiredRuleIds = AskRequiredRuleIds(ruleService);
+
+            Screen.Step(4, StepCount, "Для кого и в какой срок");
             Screen.Hint("Профиль — категория мигрантов и срок для неё. Правило действует,");
             Screen.Hint("если мигрант подходит хотя бы под один профиль");
 
@@ -59,6 +64,7 @@
                 Refusal = refusal,
                 OrganizationNames = organizationNames,
                 OrganizationAddresses = organizationAddresses,
+                RequiredRuleIds = requiredRuleIds,
                 ProfileDays = profileDays,
                 ProfileEntryPurposes = profileEntryPurposes,
                 ProfileCitizenships = profileCitizenships,
@@ -88,6 +94,34 @@
             while (Prompt.YesNo("Добавить ещё организацию?"));
 
             return (names, addresses);
+        }
+
+        // Возвращает Id правил, от которых зависит новое, или null, если зависимостей нет.
+        private static List<int>? AskRequiredRuleIds(RuleService ruleService)
+        {
+            bool dependsOnOtherRules = Prompt.YesNo(
+                "Правило зависит от других правил?",
+                "Некоторые правила действуют только после других: например,\n" +
+                "патент оформляют после получения ИНН и сертификата о русском языке");
+            if (!dependsOnOtherRules)
+                return null;
+
+            Screen.Progress("Загружаем правила из базы…");
+            var existingRules = ruleService.GetAllRules();
+            if (existingRules.Count == 0)
+            {
+                Screen.Warning("В базе пока нет правил — выбрать не из чего, шаг пропущен");
+                return null;
+            }
+
+            var chosenIndexes = Prompt.ChooseMany(
+                "От каких правил зависит",
+                existingRules.Select(rule => rule.Name).ToList(),
+                "без зависимостей");
+            if (chosenIndexes.Count == 0)
+                return null;
+
+            return chosenIndexes.Select(index => existingRules[index].Id).ToList();
         }
     }
 }

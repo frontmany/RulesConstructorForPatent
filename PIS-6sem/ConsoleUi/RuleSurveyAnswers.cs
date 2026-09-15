@@ -11,6 +11,9 @@
         public required List<string> OrganizationNames { get; init; }
         public required List<string> OrganizationAddresses { get; init; }
 
+        // null — правило ни от чего не зависит.
+        public required List<int>? RequiredRuleIds { get; init; }
+
         public required List<int> ProfileDays { get; init; }
         public required List<List<string>> ProfileEntryPurposes { get; init; }
         public required List<List<string>> ProfileCitizenships { get; init; }

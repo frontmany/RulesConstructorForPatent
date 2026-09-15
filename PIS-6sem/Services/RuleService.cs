@@ -8,6 +8,11 @@ namespace PIS_6sem.Services
         private readonly IUnitOfWork m_unitOfWork = unitOfWork;
         private readonly RuleDirector m_director = director;
 
+        public List<Rule> GetAllRules()
+        {
+            return m_unitOfWork.Rules.GetAll();
+        }
+
         public Rule CreateRule(
             string ruleName,
             List<string> targetDocumentNames,
@@ -15,12 +20,14 @@ namespace PIS_6sem.Services
             string refusal,
             List<string> organizationNames,
             List<string> organizationAddresses,
+            List<int>? requiredRuleIds,
             List<int> profileDays,
             List<List<string>> profileEntryPurposes,
             List<List<string>> profileCitizenships,
             List<List<string>> profilePropertyNames,
             List<List<string>> profilePropertyValues)
         {
+            var requiredAccomplishedRules = LoadRequiredRules(requiredRuleIds);
             var ruleBuilder = new RuleBuilder();
             var profileFactory = new ProfileFactory();
 
@@ -28,6 +35,7 @@ namespace PIS_6sem.Services
                 ruleName, targetDocumentNames,
                 guidanceDescription, refusal,
                 organizationNames, organizationAddresses,
+                requiredAccomplishedRules,
                 profileDays, profileEntryPurposes, profileCitizenships,
                 profilePropertyNames, profilePropertyValues,
                 ruleBuilder, profileFactory);
@@ -40,6 +48,21 @@ namespace PIS_6sem.Services
             }
 
             return rule;
+        }
+
+        // Пользователь выбирает зависимости по Id, а билдеру нужны сами правила из базы.
+        private List<Rule>? LoadRequiredRules(List<int>? requiredRuleIds)
+        {
+            if (requiredRuleIds == null)
+                return null;
+
+            var requiredRules = m_unitOfWork.Rules.GetByIds(requiredRuleIds);
+
+            var missingIds = requiredRuleIds.Except(requiredRules.Select(r => r.Id)).ToList();
+            if (missingIds.Count > 0)
+                throw new InvalidOperationException($"В базе нет правил с номерами: {string.Join(", ", missingIds)}");
+
+            return requiredRules;
         }
     }
 }

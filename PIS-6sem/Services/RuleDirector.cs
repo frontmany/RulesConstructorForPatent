@@ -11,6 +11,7 @@ namespace PIS_6sem.Services
             string refusal,
             List<string> organizationNames,
             List<string> organizationAddresses,
+            List<Rule>? requiredAccomplishedRules,
             List<int> profileDays,
             List<List<string>> profileEntryPurposes,
             List<List<string>> profileCitizenships,
@@ -24,6 +25,12 @@ namespace PIS_6sem.Services
 
             foreach (var documentName in targetDocumentNames)
                 ruleBuilder.AddTargetDocument(documentName);
+
+            if (requiredAccomplishedRules != null)
+            {
+                foreach (var requiredRule in requiredAccomplishedRules)
+                    ruleBuilder.AddRequiredAccomplishedRule(requiredRule);
+            }
 
             for (int i = 0; i < profileDays.Count; i++)
             {

@@ -7,6 +7,7 @@ namespace PIS_6sem.Services
         private string m_name = "";
         private readonly List<string> m_targetDocumentNames = [];
         private readonly List<Profile> m_profiles = [];
+        private List<Rule>? m_requiredAccomplishedRules;
         private Guidance? m_guidance;
 
         public void Reset()
@@ -14,6 +15,7 @@ namespace PIS_6sem.Services
             m_name = "";
             m_targetDocumentNames.Clear();
             m_profiles.Clear();
+            m_requiredAccomplishedRules = null;
             m_guidance = null;
         }
 
@@ -24,6 +26,13 @@ namespace PIS_6sem.Services
 
         public void AddProfile(Profile profile)
             => m_profiles.Add(profile);
+
+        // Список заводится только при первой зависимости: если их нет, у правила останется null.
+        public void AddRequiredAccomplishedRule(Rule requiredRule)
+        {
+            m_requiredAccomplishedRules ??= [];
+            m_requiredAccomplishedRules.Add(requiredRule);
+        }
 
         public void SetGuidance(
             string description,
@@ -63,7 +72,11 @@ namespace PIS_6sem.Services
             if (m_targetDocumentNames.Count == 0)
                 throw new InvalidOperationException("У правила должен быть хотя бы один целевой документ");
 
-            var rule = new Rule { Name = m_name };
+            var rule = new Rule
+            {
+                Name = m_name,
+                RequiredAccomplishedRules = m_requiredAccomplishedRules?.ToList()
+            };
 
             foreach (var profile in m_profiles)
                 rule.Profiles.Add(profile);
