@@ -6,6 +6,8 @@
     <RootNamespace>PIS_6sem</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Если .NET 8 не установлен, программа запустится на более новой версии (например, .NET 10). -->
+    <RollForward>Major</RollForward>
   </PropertyGroup>
 
   <ItemGroup>
