@@ -6,23 +6,23 @@ namespace PIS_6sem.Services
     {
         public Profile CreateProfile(
             int days,
-            List<string> purposeNames,
-            List<string> citizenshipNames,
+            List<string> entryPurposes,
+            List<string> citizenships,
             List<string> propertyNames,
             List<string> propertyValues)
         {
             var profile = new Profile { Days = days };
 
-            foreach (var purpose in purposeNames)
+            foreach (var entryPurpose in entryPurposes)
             {
                 profile.Properties.Add(new ProfileProperty
                 {
                     Name = "Цель въезда",
-                    Value = purpose
+                    Value = entryPurpose
                 });
             }
 
-            foreach (var citizenship in citizenshipNames)
+            foreach (var citizenship in citizenships)
             {
                 profile.Properties.Add(new ProfileProperty
                 {

@@ -6,38 +6,38 @@ namespace PIS_6sem.Services
     {
         public Rule Construct(
             string ruleName,
-            List<string> targetDocs,
+            List<string> targetDocumentNames,
             string guidanceDescription,
             string refusal,
-            List<string> orgNames,
-            List<string> orgAddresses,
-            List<int> daysList,
-            List<List<string>> purposeNamesList,
-            List<List<string>> citizenshipNamesList,
-            List<List<string>> propertyNames,
-            List<List<string>> propertyValues,
+            List<string> organizationNames,
+            List<string> organizationAddresses,
+            List<int> profileDays,
+            List<List<string>> profileEntryPurposes,
+            List<List<string>> profileCitizenships,
+            List<List<string>> profilePropertyNames,
+            List<List<string>> profilePropertyValues,
             RuleBuilder ruleBuilder,
             ProfileFactory profileFactory)
         {
             ruleBuilder.Reset();
-            ruleBuilder.AddName(ruleName);
+            ruleBuilder.SetName(ruleName);
 
-            foreach (var doc in targetDocs)
-                ruleBuilder.AddTargetDocument(doc);
+            foreach (var documentName in targetDocumentNames)
+                ruleBuilder.AddTargetDocument(documentName);
 
-            for (int i = 0; i < daysList.Count; i++)
+            for (int i = 0; i < profileDays.Count; i++)
             {
                 var profile = profileFactory.CreateProfile(
-                    daysList[i],
-                    purposeNamesList[i],
-                    citizenshipNamesList[i],
-                    propertyNames[i],
-                    propertyValues[i]);
+                    profileDays[i],
+                    profileEntryPurposes[i],
+                    profileCitizenships[i],
+                    profilePropertyNames[i],
+                    profilePropertyValues[i]);
 
                 ruleBuilder.AddProfile(profile);
             }
 
-            ruleBuilder.AddGuidance(guidanceDescription, refusal, orgNames, orgAddresses);
+            ruleBuilder.SetGuidance(guidanceDescription, refusal, organizationNames, organizationAddresses);
 
             return ruleBuilder.GetResult();
         }
