@@ -16,14 +16,6 @@ namespace PIS_6sem
             if (OperatingSystem.IsWindows() && !Console.IsInputRedirected)
                 Console.InputEncoding = System.Text.Encoding.Unicode;
 
-            var db = new RuleDbContext();
-            db.Database.EnsureCreated();
-
-            var unitOfWork = new UnitOfWork(db);
-            var director = new RuleDirector();
-            var ruleService = new RuleService(unitOfWork, director);
-
-
             Console.Write("Название правила: ");
             string ruleName = Console.ReadLine()!;
 
@@ -84,6 +76,11 @@ namespace PIS_6sem
             }
 
 
+            // База и сервис нужны только для сохранения, поэтому создаются здесь, а не в начале.
+            using var db = new RuleDbContext();
+            db.Database.EnsureCreated();
+
+            var ruleService = new RuleService(new UnitOfWork(db), new RuleDirector());
             var rule = ruleService.CreateRule(
                 ruleName, targetDocumentNames,
                 guidanceDescription, refusal,

@@ -5,7 +5,10 @@ namespace PIS_6sem.Data
     public class UnitOfWork(RuleDbContext db) : IUnitOfWork
     {
         private readonly RuleDbContext m_db = db;
-        public IRuleRepository Rules { get; private set; } = new RuleRepository(db);
+        private IRuleRepository? m_rules;
+
+        // Репозиторий создаётся при первом обращении — там, где он действительно нужен.
+        public IRuleRepository Rules => m_rules ??= new RuleRepository(m_db);
 
         public IDbContextTransaction BeginTransaction()
         {
