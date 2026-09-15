@@ -1,4 +1,5 @@
-﻿using PIS_6sem.Entities;
+﻿using PIS_6sem.Catalogs;
+using PIS_6sem.Entities;
 
 namespace PIS_6sem.Services
 {
@@ -23,7 +24,7 @@ namespace PIS_6sem.Services
             {
                 profile.Properties.Add(new ProfileProperty
                 {
-                    Name = "Цель въезда",
+                    Name = ProfilePropertyCatalog.EntryPurpose.Name,
                     Value = entryPurpose
                 });
             }
@@ -32,7 +33,7 @@ namespace PIS_6sem.Services
             {
                 profile.Properties.Add(new ProfileProperty
                 {
-                    Name = "Гражданство",
+                    Name = ProfilePropertyCatalog.Citizenship.Name,
                     Value = citizenship
                 });
             }

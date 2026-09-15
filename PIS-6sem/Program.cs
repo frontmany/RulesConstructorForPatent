@@ -1,122 +1,58 @@
-﻿using PIS_6sem.Data;
-using PIS_6sem.Entities;
+﻿using System.Text;
+using Microsoft.EntityFrameworkCore;
+using PIS_6sem.ConsoleUi;
+using PIS_6sem.Data;
 using PIS_6sem.Services;
 
 namespace PIS_6sem
 {
-    class Program
+    static class Program
     {
         static void Main()
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
 
             // Консоль Windows может читать ввод в кодировке без кириллицы (например, 850),
             // и тогда русские буквы приходят как «?». В режиме UTF-16 .NET получает символы
             // напрямую. Для ввода из файла кодировку не трогаем.
             if (OperatingSystem.IsWindows() && !Console.IsInputRedirected)
-                Console.InputEncoding = System.Text.Encoding.Unicode;
+                Console.InputEncoding = Encoding.Unicode;
 
-            Console.Write("Название правила: ");
-            string ruleName = Console.ReadLine()!;
+            Screen.Banner();
 
-            Console.Write("Целевые документы (через ;): ");
-            var targetDocumentNames = Console.ReadLine()!.Split(';').ToList();
-
-            Console.Write("Описание руководства: ");
-            string guidanceDescription = Console.ReadLine()!;
-
-            Console.Write("Описание отказа: ");
-            string refusal = Console.ReadLine()!;
-
-            Console.Write("Названия организаций (через ;): ");
-            var organizationNames = Console.ReadLine()!.Split(';').ToList();
-
-            Console.Write("Адреса организаций (через ;): ");
-            var organizationAddresses = Console.ReadLine()!.Split(';').ToList();
-
-
-            var profileDays = new List<int>();
-            var profileEntryPurposes = new List<List<string>>();
-            var profileCitizenships = new List<List<string>>();
-            var profilePropertyNames = new List<List<string>>();
-            var profilePropertyValues = new List<List<string>>();
-
-            while (true)
+            try
             {
-                Console.WriteLine("Профиль");
-                Console.Write("Количество дней: ");
-                profileDays.Add(int.Parse(Console.ReadLine()!));
+                var answers = RuleSurvey.Ask();
 
-                Console.Write("Цели въезда (через ;): ");
-                profileEntryPurposes.Add([.. Console.ReadLine()!.Split(';')]);
+                Console.WriteLine();
+                Screen.Progress("Сохраняем правило…");
 
-                Console.Write("Гражданства (через ;): ");
-                profileCitizenships.Add([.. Console.ReadLine()!.Split(';')]);
+                // База и сервис нужны только для сохранения, поэтому создаются после опроса.
+                using var dbContext = new RuleDbContext();
+                dbContext.Database.EnsureCreated();
 
-                var propertyNames = new List<string>();
-                var propertyValues = new List<string>();
+                var ruleService = new RuleService(new UnitOfWork(dbContext), new RuleDirector());
+                var rule = ruleService.CreateRule(
+                    answers.RuleName, answers.TargetDocumentNames,
+                    answers.GuidanceDescription, answers.Refusal,
+                    answers.OrganizationNames, answers.OrganizationAddresses,
+                    answers.ProfileDays, answers.ProfileEntryPurposes, answers.ProfileCitizenships,
+                    answers.ProfilePropertyNames, answers.ProfilePropertyValues);
 
-                while (true)
-                {
-                    Console.Write("Добавить свойство? (д/н): ");
-                    if (Console.ReadLine()?.ToLower() != "д") break;
-
-                    Console.Write("Название свойства: ");
-                    propertyNames.Add(Console.ReadLine()!);
-
-                    Console.Write("Значение свойства: ");
-                    propertyValues.Add(Console.ReadLine()!);
-                }
-
-                profilePropertyNames.Add(propertyNames);
-                profilePropertyValues.Add(propertyValues);
-
-                Console.Write("Добавить ещё профиль? (д/н): ");
-                if (Console.ReadLine()?.ToLower() != "д") break;
+                RulePrinter.Print(rule);
+            }
+            catch (EndOfStreamException)
+            {
+                Console.WriteLine();
+                Screen.Error("Ввод прервался до конца опроса — правило не сохранено");
+            }
+            catch (DbUpdateException exception)
+            {
+                Console.WriteLine();
+                Screen.Error($"Не удалось сохранить правило: {exception.InnerException?.Message ?? exception.Message}");
             }
 
-
-            // База и сервис нужны только для сохранения, поэтому создаются здесь, а не в начале.
-            using var db = new RuleDbContext();
-            db.Database.EnsureCreated();
-
-            var ruleService = new RuleService(new UnitOfWork(db), new RuleDirector());
-            var rule = ruleService.CreateRule(
-                ruleName, targetDocumentNames,
-                guidanceDescription, refusal,
-                organizationNames, organizationAddresses,
-                profileDays, profileEntryPurposes, profileCitizenships,
-                profilePropertyNames, profilePropertyValues);
-
-
-            PrintRule(rule);
-            Console.ReadKey();
-        }
-
-        static void PrintRule(Rule rule)
-        {
-            Console.WriteLine($"\nПравило #{rule.Id}: {rule.Name}");
-
-            Console.WriteLine("\nДокументы:");
-            foreach (var document in rule.TargetDocuments)
-                Console.WriteLine($"  - {document.Name}");
-
-            Console.WriteLine("\nПрофили:");
-            int i = 1;
-            foreach (var profile in rule.Profiles)
-            {
-                Console.WriteLine($"  Профиль #{i++} | Дни: {profile.Days}");
-                foreach (var property in profile.Properties)
-                    Console.WriteLine($"    {property.Name} = {property.Value}");
-            }
-
-            if (rule.Guidance != null)
-            {
-                Console.WriteLine($"\nРуководство: {rule.Guidance.Description}");
-                Console.WriteLine($"Отказ: {rule.Guidance.Refusal}");
-                foreach (var organization in rule.Guidance.Organizations)
-                    Console.WriteLine($"  {organization.Name} — {organization.Address}");
-            }
+            Screen.WaitForExit();
         }
     }
 }
