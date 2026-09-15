@@ -1,0 +1,37 @@
+# Правила оформления кода. Visual Studio и Rider подхватывают их автоматически.
+root = true
+
+[*]
+indent_style = space
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+charset = utf-8-bom
+end_of_line = crlf
+
+# Приватные константы — PascalCase: StepCount, LabelWidth.
+# Правило стоит первым, чтобы константы не попадали под правило для полей ниже.
+dotnet_naming_rule.private_constants_should_be_pascal_case.symbols = private_constants
+dotnet_naming_rule.private_constants_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_rule.private_constants_should_be_pascal_case.severity = warning
+
+dotnet_naming_symbols.private_constants.applicable_kinds = field
+dotnet_naming_symbols.private_constants.applicable_accessibilities = private
+dotnet_naming_symbols.private_constants.required_modifiers = const
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# Приватные поля — с префиксом m_: m_unitOfWork, m_name.
+dotnet_naming_rule.private_fields_should_have_m_prefix.symbols = private_fields
+dotnet_naming_rule.private_fields_should_have_m_prefix.style = m_prefix_style
+dotnet_naming_rule.private_fields_should_have_m_prefix.severity = warning
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.m_prefix_style.required_prefix = m_
+dotnet_naming_style.m_prefix_style.capitalization = camel_case
+
+# Нарушение правил именования — предупреждение и при сборке (EnforceCodeStyleInBuild в .csproj).
+dotnet_diagnostic.IDE1006.severity = warning

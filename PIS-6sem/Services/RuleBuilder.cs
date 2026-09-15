@@ -4,26 +4,26 @@ namespace PIS_6sem.Services
 {
     public class RuleBuilder
     {
-        private string _name = "";
-        private readonly List<string> _targetDocNames = [];
-        private readonly List<Profile> _profiles = [];
-        private Guidance? _guidance;
+        private string m_name = "";
+        private readonly List<string> m_targetDocNames = [];
+        private readonly List<Profile> m_profiles = [];
+        private Guidance? m_guidance;
 
         public void Reset()
         {
-            _name = "";
-            _targetDocNames.Clear();
-            _profiles.Clear();
-            _guidance = null;
+            m_name = "";
+            m_targetDocNames.Clear();
+            m_profiles.Clear();
+            m_guidance = null;
         }
 
-        public void AddName(string name) => _name = name;
+        public void AddName(string name) => m_name = name;
 
         public void AddTargetDocument(string targetDoc)
-            => _targetDocNames.Add(targetDoc);
+            => m_targetDocNames.Add(targetDoc);
 
         public void AddProfile(Profile profile)
-            => _profiles.Add(profile);
+            => m_profiles.Add(profile);
 
         public void AddGuidance(
             string description,
@@ -47,23 +47,23 @@ namespace PIS_6sem.Services
                 });
             }
 
-            _guidance = guidance;
+            m_guidance = guidance;
         }
 
         public Rule GetResult()
         {
-            var rule = new Rule { Name = _name };
+            var rule = new Rule { Name = m_name };
 
-            foreach (var profile in _profiles)
+            foreach (var profile in m_profiles)
                 rule.Profiles.Add(profile);
 
-            foreach (var docName in _targetDocNames)
+            foreach (var docName in m_targetDocNames)
             {
                 rule.TargetDocuments.Add(new TargetDocument { Name = docName });
             }
 
-            if (_guidance != null)
-                rule.Guidance = _guidance;
+            if (m_guidance != null)
+                rule.Guidance = m_guidance;
 
             return rule;
         }

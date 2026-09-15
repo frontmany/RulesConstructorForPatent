@@ -5,8 +5,8 @@ namespace PIS_6sem.Services
 {
     public class ServiceRule(IUnitOfWork unitOfWork, RuleDirector director)
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly RuleDirector _director = director;
+        private readonly IUnitOfWork m_unitOfWork = unitOfWork;
+        private readonly RuleDirector m_director = director;
 
         public Rule CreateRule(
             string ruleName,
@@ -24,7 +24,7 @@ namespace PIS_6sem.Services
             var ruleBuilder = new RuleBuilder();
             var profileFactory = new ProfileFactory();
 
-            var rule = _director.Construct(
+            var rule = m_director.Construct(
                 ruleName, targetDocs,
                 guidanceDescription, refusal,
                 orgNames, orgAddresses,
@@ -32,10 +32,10 @@ namespace PIS_6sem.Services
                 propertyNames, propertyValues,
                 ruleBuilder, profileFactory);
 
-            using (var transaction = _unitOfWork.BeginTransaction())
+            using (var transaction = m_unitOfWork.BeginTransaction())
             {
-                _unitOfWork.Rules.Add(rule);
-                _unitOfWork.Save();
+                m_unitOfWork.Rules.Add(rule);
+                m_unitOfWork.Save();
                 transaction.Commit();
             }
 
