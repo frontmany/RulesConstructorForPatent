@@ -10,6 +10,12 @@ namespace PIS_6sem
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            // Консоль Windows может читать ввод в кодировке без кириллицы (например, 850),
+            // и тогда русские буквы приходят как «?». В режиме UTF-16 .NET получает символы
+            // напрямую. Для ввода из файла кодировку не трогаем.
+            if (OperatingSystem.IsWindows() && !Console.IsInputRedirected)
+                Console.InputEncoding = System.Text.Encoding.Unicode;
+
             var db = new RuleDbContext();
             db.Database.EnsureCreated();
 
