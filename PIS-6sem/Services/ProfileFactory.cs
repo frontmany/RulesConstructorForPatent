@@ -11,6 +11,12 @@ namespace PIS_6sem.Services
             List<string> propertyNames,
             List<string> propertyValues)
         {
+            if (days < 0)
+                throw new ArgumentOutOfRangeException(nameof(days), "Срок профиля не может быть отрицательным");
+
+            if (propertyNames.Count != propertyValues.Count)
+                throw new ArgumentException("У каждого свойства профиля должно быть одно значение", nameof(propertyValues));
+
             var profile = new Profile { Days = days };
 
             foreach (var entryPurpose in entryPurposes)

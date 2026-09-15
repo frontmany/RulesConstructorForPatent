@@ -31,14 +31,19 @@ namespace PIS_6sem.Services
             List<string> organizationNames,
             List<string> organizationAddresses)
         {
+            if (organizationNames.Count == 0)
+                throw new ArgumentException("В руководстве должна быть хотя бы одна организация", nameof(organizationNames));
+
+            if (organizationNames.Count != organizationAddresses.Count)
+                throw new ArgumentException("Названий и адресов организаций должно быть поровну", nameof(organizationAddresses));
+
             var guidance = new Guidance
             {
                 Description = description,
                 Refusal = refusal
             };
 
-            int count = Math.Min(organizationNames.Count, organizationAddresses.Count);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < organizationNames.Count; i++)
             {
                 guidance.Organizations.Add(new Organization
                 {
@@ -52,6 +57,12 @@ namespace PIS_6sem.Services
 
         public Rule GetResult()
         {
+            if (string.IsNullOrWhiteSpace(m_name))
+                throw new InvalidOperationException("У правила должно быть название");
+
+            if (m_targetDocumentNames.Count == 0)
+                throw new InvalidOperationException("У правила должен быть хотя бы один целевой документ");
+
             var rule = new Rule { Name = m_name };
 
             foreach (var profile in m_profiles)
