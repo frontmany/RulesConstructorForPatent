@@ -86,6 +86,15 @@ namespace RulesConstructorForPatent.Data
                 .HasMany(k => k.Options)
                 .WithOne(o => o.Kind)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Одинаковые виды склеились бы при выводе, а одинаковые варианты задвоились бы в опросе.
+            modelBuilder.Entity<ProfilePropertyKind>()
+                .HasIndex(k => k.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<ProfilePropertyOption>()
+                .HasIndex(o => new { o.KindId, o.Value })
+                .IsUnique();
         }
     }
 }

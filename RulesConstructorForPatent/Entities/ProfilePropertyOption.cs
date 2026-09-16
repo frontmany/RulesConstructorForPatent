@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string Value { get; set; } = "";
 
+        public int KindId { get; set; }
         public ProfilePropertyKind Kind { get; set; } = null!;
     }
 }
