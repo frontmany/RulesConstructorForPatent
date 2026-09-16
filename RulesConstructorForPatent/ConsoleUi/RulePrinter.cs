@@ -2,7 +2,6 @@
 
 namespace RulesConstructorForPatent.ConsoleUi
 {
-    // Итоговая карточка сохранённого правила.
     public static class RulePrinter
     {
         private const int LabelWidth = 34;

@@ -51,7 +51,7 @@
             }
         }
 
-        // Выбор нескольких пунктов списка по номерам. Возвращает индексы выбранных пунктов.
+        // Возвращает индексы выбранных пунктов.
         // emptyAnswerMeaning — что означает пустой ответ; null, если выбрать нужно хотя бы один пункт.
         public static List<int> ChooseMany(string label, IReadOnlyList<string> options, string? emptyAnswerMeaning)
         {

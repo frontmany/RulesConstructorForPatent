@@ -2,7 +2,6 @@
 
 namespace RulesConstructorForPatent.ConsoleUi
 {
-    // Ввод одного профиля: срок и условия из справочника ProfilePropertyCatalog.
     public static class ProfileSurvey
     {
         public static ProfileSurveyAnswers Ask(int profileNumber)

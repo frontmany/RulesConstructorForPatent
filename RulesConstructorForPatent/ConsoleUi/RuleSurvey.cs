@@ -2,7 +2,7 @@
 
 namespace RulesConstructorForPatent.ConsoleUi
 {
-    // Опрос о новом правиле. Шаги повторяют колонки таблицы ТЗ «Дорожная карта».
+    // Шаги опроса повторяют колонки таблицы ТЗ «Дорожная карта».
     public static class RuleSurvey
     {
         private const int StepCount = 4;
