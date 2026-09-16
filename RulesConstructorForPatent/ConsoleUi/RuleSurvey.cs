@@ -2,7 +2,6 @@
 
 namespace RulesConstructorForPatent.ConsoleUi
 {
-    // Шаги опроса повторяют колонки таблицы ТЗ «Дорожная карта».
     public static class RuleSurvey
     {
         private const int StepCount = 4;
@@ -13,8 +12,7 @@ namespace RulesConstructorForPatent.ConsoleUi
             string ruleName = Prompt.Text(
                 "Название правила",
                 "Например: Получение ИНН");
-            // В модели целевые документы — список (Rule.TargetDocuments), но в пп. 5–6.4 ТЗ
-            // каждое правило даёт ровно один документ, поэтому спрашиваем один.
+
             string targetDocumentName = Prompt.Text(
                 "Целевой документ",
                 "Документ, который можно получить при выполнении правила\n" +
@@ -72,7 +70,6 @@ namespace RulesConstructorForPatent.ConsoleUi
             };
         }
 
-        // Организации вводятся по одной, поэтому у каждого названия есть свой адрес.
         private static (List<string> Names, List<string> Addresses) AskOrganizations()
         {
             var names = new List<string>();

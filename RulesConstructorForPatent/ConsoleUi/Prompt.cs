@@ -30,18 +30,13 @@
             }
         }
 
-        // Подсказка печатается над вопросом: ответ вводится в той же строке, что и вопрос.
         public static bool YesNo(string question, string hint = "")
         {
-            Console.WriteLine();
-            PrintHint(hint);
+            Ask($"{question} (д/н)", hint);
 
             while (true)
             {
-                Screen.Write($"  {question} (д/н) ", ConsoleColor.White);
-                Screen.Write("> ", ConsoleColor.Cyan);
-
-                string answer = ReadLine().ToLowerInvariant();
+                string answer = ReadAnswer().ToLowerInvariant();
                 if (answer is "д" or "да")
                     return true;
                 if (answer is "н" or "нет")
@@ -88,7 +83,6 @@
             PrintHint(hint);
         }
 
-        // Подсказка может состоять из нескольких строк, разделённых \n.
         private static void PrintHint(string hint)
         {
             if (hint.Length == 0)
