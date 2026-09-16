@@ -15,8 +15,6 @@
         public required List<int>? RequiredRuleIds { get; init; }
 
         public required List<int> ProfileDays { get; init; }
-        public required List<List<string>> ProfileEntryPurposes { get; init; }
-        public required List<List<string>> ProfileCitizenships { get; init; }
         public required List<List<string>> ProfilePropertyNames { get; init; }
         public required List<List<string>> ProfilePropertyValues { get; init; }
     }

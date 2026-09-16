@@ -13,8 +13,6 @@ namespace RulesConstructorForPatent.Services
             List<string> organizationAddresses,
             List<Rule>? requiredAccomplishedRules,
             List<int> profileDays,
-            List<List<string>> profileEntryPurposes,
-            List<List<string>> profileCitizenships,
             List<List<string>> profilePropertyNames,
             List<List<string>> profilePropertyValues,
             RuleBuilder ruleBuilder,
@@ -36,8 +34,6 @@ namespace RulesConstructorForPatent.Services
             {
                 var profile = profileFactory.CreateProfile(
                     profileDays[i],
-                    profileEntryPurposes[i],
-                    profileCitizenships[i],
                     profilePropertyNames[i],
                     profilePropertyValues[i]);
 

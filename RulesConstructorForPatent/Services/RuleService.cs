@@ -15,6 +15,13 @@ namespace RulesConstructorForPatent.Services
                 .ToList();
         }
 
+        public List<ProfileCondition> GetProfileConditions()
+        {
+            return m_unitOfWork.ProfilePropertyKinds.GetAll()
+                .Select(kind => new ProfileCondition(kind.Name, kind.Options.Select(option => option.Value).ToList()))
+                .ToList();
+        }
+
         public Rule CreateRule(
             string ruleName,
             List<string> targetDocumentNames,
@@ -24,8 +31,6 @@ namespace RulesConstructorForPatent.Services
             List<string> organizationAddresses,
             List<int>? requiredRuleIds,
             List<int> profileDays,
-            List<List<string>> profileEntryPurposes,
-            List<List<string>> profileCitizenships,
             List<List<string>> profilePropertyNames,
             List<List<string>> profilePropertyValues)
         {
@@ -38,8 +43,7 @@ namespace RulesConstructorForPatent.Services
                 guidanceDescription, refusal,
                 organizationNames, organizationAddresses,
                 requiredAccomplishedRules,
-                profileDays, profileEntryPurposes, profileCitizenships,
-                profilePropertyNames, profilePropertyValues,
+                profileDays, profilePropertyNames, profilePropertyValues,
                 ruleBuilder, profileFactory);
 
             using (var transaction = m_unitOfWork.BeginTransaction())

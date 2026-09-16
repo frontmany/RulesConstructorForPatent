@@ -6,9 +6,12 @@ namespace RulesConstructorForPatent.Data
     {
         private readonly RuleDbContext m_db = db;
         private IRuleRepository? m_rules;
+        private IProfilePropertyKindRepository? m_profilePropertyKinds;
 
         // Репозиторий создаётся при первом обращении — там, где он действительно нужен.
         public IRuleRepository Rules => m_rules ??= new RuleRepository(m_db);
+        public IProfilePropertyKindRepository ProfilePropertyKinds =>
+            m_profilePropertyKinds ??= new ProfilePropertyKindRepository(m_db);
 
         public IDbContextTransaction BeginTransaction()
         {

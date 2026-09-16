@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Data.Common;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using RulesConstructorForPatent.ConsoleUi;
 using RulesConstructorForPatent.Data;
@@ -30,15 +31,14 @@ namespace RulesConstructorForPatent
                     answers.GuidanceDescription, answers.Refusal,
                     answers.OrganizationNames, answers.OrganizationAddresses,
                     answers.RequiredRuleIds,
-                    answers.ProfileDays, answers.ProfileEntryPurposes, answers.ProfileCitizenships,
-                    answers.ProfilePropertyNames, answers.ProfilePropertyValues);
+                    answers.ProfileDays, answers.ProfilePropertyNames, answers.ProfilePropertyValues);
 
                 RulePrinter.Print(rule);
             }
-            catch (DbUpdateException exception)
+            catch (Exception exception) when (exception is DbUpdateException or DbException)
             {
                 Console.WriteLine();
-                Screen.Error($"Не удалось сохранить правило: {exception.InnerException?.Message ?? exception.Message}");
+                Screen.Error($"Ошибка базы данных: {exception.InnerException?.Message ?? exception.Message}");
                 Screen.Hint("Если файл rules.db остался от прошлой версии программы, удалите его:");
                 Screen.Hint("структура базы изменилась, и программа создаст новую");
             }

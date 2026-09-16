@@ -36,20 +36,20 @@ namespace RulesConstructorForPatent.ConsoleUi
             Screen.Hint("Профиль — категория мигрантов и срок для неё. Правило действует,");
             Screen.Hint("если мигрант подходит хотя бы под один профиль");
 
+            var conditions = ruleService.GetProfileConditions();
+
+            int profileNumber = 1;
             var profileDays = new List<int>();
-            var profileEntryPurposes = new List<List<string>>();
-            var profileCitizenships = new List<List<string>>();
             var profilePropertyNames = new List<List<string>>();
             var profilePropertyValues = new List<List<string>>();
             do
             {
-                var profile = ProfileSurvey.Ask(profileDays.Count + 1);
+                var profile = ProfileSurvey.Ask(profileNumber, conditions);
 
                 profileDays.Add(profile.Days);
-                profileEntryPurposes.Add(profile.EntryPurposes);
-                profileCitizenships.Add(profile.Citizenships);
                 profilePropertyNames.Add(profile.PropertyNames);
                 profilePropertyValues.Add(profile.PropertyValues);
+                profileNumber++;
             }
             while (Prompt.YesNo("Добавить ещё профиль?"));
 
@@ -63,8 +63,6 @@ namespace RulesConstructorForPatent.ConsoleUi
                 OrganizationAddresses = organizationAddresses,
                 RequiredRuleIds = requiredRuleIds,
                 ProfileDays = profileDays,
-                ProfileEntryPurposes = profileEntryPurposes,
-                ProfileCitizenships = profileCitizenships,
                 ProfilePropertyNames = profilePropertyNames,
                 ProfilePropertyValues = profilePropertyValues
             };
@@ -113,6 +111,7 @@ namespace RulesConstructorForPatent.ConsoleUi
                 "От каких правил зависит",
                 existingRules.Select(rule => rule.Name).ToList(),
                 "без зависимостей");
+
             if (chosenIndexes.Count == 0)
                 return null;
 

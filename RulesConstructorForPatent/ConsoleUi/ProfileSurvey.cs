@@ -1,21 +1,23 @@
-﻿using RulesConstructorForPatent.Catalogs;
+﻿using RulesConstructorForPatent.Services;
 
 namespace RulesConstructorForPatent.ConsoleUi
 {
     public static class ProfileSurvey
     {
-        public static ProfileSurveyAnswers Ask(int profileNumber)
+        public static ProfileSurveyAnswers Ask(int profileNumber, List<ProfileCondition> conditions)
         {
             Screen.SubHeader($"Профиль {profileNumber}");
 
-            var entryPurposes = AskValues(ProfilePropertyCatalog.EntryPurpose, "любая цель");
-            var citizenships = AskValues(ProfilePropertyCatalog.Citizenship, "любое гражданство");
-
-            // Цель въезда и гражданство у фабрики — отдельные параметры, остальные условия
-            // передаются парами «название свойства — значение».
-            var specialStatus = ProfilePropertyCatalog.SpecialStatus;
-            var propertyValues = AskValues(specialStatus, "любой статус");
-            var propertyNames = Enumerable.Repeat(specialStatus.Name, propertyValues.Count).ToList();
+            var propertyNames = new List<string>();
+            var propertyValues = new List<string>();
+            foreach (var condition in conditions)
+            {
+                foreach (var value in AskValues(condition))
+                {
+                    propertyNames.Add(condition.Name);
+                    propertyValues.Add(value);
+                }
+            }
 
             // Срок спрашиваем последним: он относится к категории, заданной условиями выше.
             int days = Prompt.Integer(
@@ -28,18 +30,16 @@ namespace RulesConstructorForPatent.ConsoleUi
             return new ProfileSurveyAnswers
             {
                 Days = days,
-                EntryPurposes = entryPurposes,
-                Citizenships = citizenships,
                 PropertyNames = propertyNames,
                 PropertyValues = propertyValues
             };
         }
 
         // Несколько выбранных значений одного условия объединяются через «или».
-        private static List<string> AskValues(ProfilePropertyKind kind, string emptyAnswerMeaning)
+        private static List<string> AskValues(ProfileCondition condition)
         {
-            var chosenIndexes = Prompt.ChooseMany(kind.Name, kind.Values, emptyAnswerMeaning);
-            return chosenIndexes.Select(index => kind.Values[index]).ToList();
+            var chosenIndexes = Prompt.ChooseMany(condition.Name, condition.Values, "любое значение");
+            return chosenIndexes.Select(index => condition.Values[index]).ToList();
         }
     }
 }

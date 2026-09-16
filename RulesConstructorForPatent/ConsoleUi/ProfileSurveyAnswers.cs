@@ -4,8 +4,6 @@
     public class ProfileSurveyAnswers
     {
         public required int Days { get; init; }
-        public required List<string> EntryPurposes { get; init; }
-        public required List<string> Citizenships { get; init; }
         public required List<string> PropertyNames { get; init; }
         public required List<string> PropertyValues { get; init; }
     }
