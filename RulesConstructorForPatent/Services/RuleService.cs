@@ -46,12 +46,8 @@ namespace RulesConstructorForPatent.Services
                 profileDays, profilePropertyNames, profilePropertyValues,
                 ruleBuilder, profileFactory);
 
-            using (var transaction = m_unitOfWork.BeginTransaction())
-            {
-                m_unitOfWork.Rules.Add(rule);
-                m_unitOfWork.Save();
-                transaction.Commit();
-            }
+            m_unitOfWork.Rules.Add(rule);
+            m_unitOfWork.Save();
 
             return ToDetails(rule);
         }

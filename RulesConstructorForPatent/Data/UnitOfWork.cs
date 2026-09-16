@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-
-namespace RulesConstructorForPatent.Data
+﻿namespace RulesConstructorForPatent.Data
 {
     public class UnitOfWork(RuleDbContext db) : IUnitOfWork
     {
@@ -12,11 +10,6 @@ namespace RulesConstructorForPatent.Data
         public IRuleRepository Rules => m_rules ??= new RuleRepository(m_db);
         public IProfilePropertyKindRepository ProfilePropertyKinds =>
             m_profilePropertyKinds ??= new ProfilePropertyKindRepository(m_db);
-
-        public IDbContextTransaction BeginTransaction()
-        {
-            return m_db.Database.BeginTransaction();
-        }
 
         public int Save()
         {
