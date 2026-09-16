@@ -14,7 +14,13 @@
 dotnet run --project RulesConstructorForPatent
 ```
 
-Можно открыть `RulesConstructorForPatent.sln` в Visual Studio. База `rules.db` создаётся в рабочей папке при первом запуске.
+Можно открыть `RulesConstructorForPatent.sln` в Visual Studio. База `rules.db` создаётся в рабочей папке программы (в Visual Studio — `bin/Debug/net8.0`).
+
+При первом запуске справочник условий пуст: программа сообщит об этом и завершится. Заполните его скриптом и запустите программу снова:
+
+```bash
+python tools/init_db.py RulesConstructorForPatent/bin/Debug/net8.0/rules.db
+```
 
 ## Как устроен опрос
 
@@ -23,7 +29,7 @@ dotnet run --project RulesConstructorForPatent
 3. **Зависимость от других правил** — правила, которые нужно выполнить раньше; выбираются из базы.
 4. **Для кого и в какой срок** — профили: условия из базы и срок. Правило действует, если мигрант подходит хотя бы под один профиль.
 
-Условия профиля хранятся в базе. При создании базы туда записываются условия пунктов 5–6.4 таблицы ТЗ: цель въезда, гражданство и особый статус. Чтобы добавить условие или поменять варианты, достаточно изменить таблицы `ProfilePropertyKinds` и `ProfilePropertyOptions` — опрос подхватит их без изменения кода.
+Условия профиля хранятся в базе. Скрипт `tools/init_db.py` записывает туда условия пунктов 5–6.4 таблицы ТЗ: цель въезда, гражданство и особый статус. Чтобы добавить условие или поменять варианты, достаточно изменить таблицы `ProfilePropertyKinds` и `ProfilePropertyOptions` — опрос подхватит их без изменения кода.
 
 ## Структура
 
@@ -34,6 +40,9 @@ RulesConstructorForPatent/
 ├── Entities/     сущности EF Core
 ├── Services/     сборка правила: RuleDirector, RuleBuilder, ProfileFactory, RuleService
 └── Data/         доступ к данным: RuleDbContext, RuleRepository, UnitOfWork
+
+tools/
+└── init_db.py    первичное заполнение справочника условий
 ```
 
 Паттерны: Builder с директором, Factory, Repository и Unit of Work.
