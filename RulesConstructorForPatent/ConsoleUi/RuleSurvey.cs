@@ -6,7 +6,7 @@ namespace RulesConstructorForPatent.ConsoleUi
     {
         private const int StepCount = 4;
 
-        public static RuleSurveyAnswers Ask(RuleService ruleService)
+        public static RuleSurveyAnswers Ask(RuleService ruleService, List<ProfileCondition> conditions)
         {
             Screen.Step(1, StepCount, "Что нужно получить");
             string ruleName = Prompt.Text(
@@ -35,8 +35,6 @@ namespace RulesConstructorForPatent.ConsoleUi
             Screen.Step(4, StepCount, "Для кого и в какой срок");
             Screen.Hint("Профиль — категория мигрантов и срок для неё. Правило действует,");
             Screen.Hint("если мигрант подходит хотя бы под один профиль");
-
-            var conditions = ruleService.GetProfileConditions();
 
             int profileNumber = 1;
             var profileDays = new List<int>();

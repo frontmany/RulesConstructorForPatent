@@ -18,7 +18,8 @@ namespace RulesConstructorForPatent
             dbContext.Database.EnsureCreated();
 
             var ruleService = new RuleService(new UnitOfWork(dbContext), new RuleDirector());
-            if (ruleService.GetProfileConditions().Count == 0)
+            var conditions = ruleService.GetProfileConditions();
+            if (conditions.Count == 0)
             {
                 Console.WriteLine();
                 Screen.Error("Справочник условий пуст: заполните его скриптом tools/init_db.py");
@@ -26,7 +27,7 @@ namespace RulesConstructorForPatent
                 return;
             }
 
-            var answers = RuleSurvey.Ask(ruleService);
+            var answers = RuleSurvey.Ask(ruleService, conditions);
 
             Console.WriteLine();
             Screen.Progress("Сохраняем правило...");
