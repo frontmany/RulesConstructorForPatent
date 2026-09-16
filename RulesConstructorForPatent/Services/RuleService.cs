@@ -36,9 +36,7 @@ namespace RulesConstructorForPatent.Services
             List<List<int>> profileOptionIds)
         {
             var requiredAccomplishedRules = LoadRequiredRules(requiredRuleIds);
-            var profileOptions = profileOptionIds
-                .Select(optionIds => m_unitOfWork.ProfilePropertyKinds.GetOptionsByIds(optionIds))
-                .ToList();
+            var profileOptions = LoadProfileOptions(profileOptionIds);
             var ruleBuilder = new RuleBuilder();
             var profileFactory = new ProfileFactory();
 
@@ -69,6 +67,22 @@ namespace RulesConstructorForPatent.Services
                 throw new InvalidOperationException($"В базе нет правил с номерами: {string.Join(", ", missingIds)}");
 
             return requiredRules;
+        }
+
+        // Варианты всех профилей загружаются одним запросом; несуществующий Id — ошибка, а не потерянное условие.
+        private List<List<ProfilePropertyOption>> LoadProfileOptions(List<List<int>> profileOptionIds)
+        {
+            var allIds = profileOptionIds.SelectMany(optionIds => optionIds).Distinct().ToList();
+            var optionsById = m_unitOfWork.ProfilePropertyKinds.GetOptionsByIds(allIds)
+                .ToDictionary(option => option.Id);
+
+            var missingIds = allIds.Except(optionsById.Keys).ToList();
+            if (missingIds.Count > 0)
+                throw new InvalidOperationException($"В базе нет вариантов условий с номерами: {string.Join(", ", missingIds)}");
+
+            return profileOptionIds
+                .Select(optionIds => optionIds.Select(id => optionsById[id]).OrderBy(option => option.Id).ToList())
+                .ToList();
         }
 
         private static RuleDetails ToDetails(Rule rule)
