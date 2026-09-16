@@ -13,8 +13,7 @@ namespace RulesConstructorForPatent.Services
             List<string> organizationAddresses,
             List<Rule>? requiredAccomplishedRules,
             List<int> profileDays,
-            List<List<string>> profilePropertyNames,
-            List<List<string>> profilePropertyValues,
+            List<List<ProfilePropertyOption>> profileOptions,
             RuleBuilder ruleBuilder,
             ProfileFactory profileFactory)
         {
@@ -32,11 +31,7 @@ namespace RulesConstructorForPatent.Services
 
             for (int i = 0; i < profileDays.Count; i++)
             {
-                var profile = profileFactory.CreateProfile(
-                    profileDays[i],
-                    profilePropertyNames[i],
-                    profilePropertyValues[i]);
-
+                var profile = profileFactory.CreateProfile(profileDays[i], profileOptions[i]);
                 ruleBuilder.AddProfile(profile);
             }
 

@@ -40,15 +40,13 @@ namespace RulesConstructorForPatent.ConsoleUi
 
             int profileNumber = 1;
             var profileDays = new List<int>();
-            var profilePropertyNames = new List<List<string>>();
-            var profilePropertyValues = new List<List<string>>();
+            var profileOptionIds = new List<List<int>>();
             do
             {
                 var profile = ProfileSurvey.Ask(profileNumber, conditions);
 
                 profileDays.Add(profile.Days);
-                profilePropertyNames.Add(profile.PropertyNames);
-                profilePropertyValues.Add(profile.PropertyValues);
+                profileOptionIds.Add(profile.OptionIds);
                 profileNumber++;
             }
             while (Prompt.YesNo("Добавить ещё профиль?"));
@@ -63,8 +61,7 @@ namespace RulesConstructorForPatent.ConsoleUi
                 OrganizationAddresses = organizationAddresses,
                 RequiredRuleIds = requiredRuleIds,
                 ProfileDays = profileDays,
-                ProfilePropertyNames = profilePropertyNames,
-                ProfilePropertyValues = profilePropertyValues
+                ProfileOptionIds = profileOptionIds
             };
         }
 

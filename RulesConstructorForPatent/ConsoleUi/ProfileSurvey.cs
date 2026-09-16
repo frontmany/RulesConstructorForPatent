@@ -8,16 +8,9 @@ namespace RulesConstructorForPatent.ConsoleUi
         {
             Screen.SubHeader($"Профиль {profileNumber}");
 
-            var propertyNames = new List<string>();
-            var propertyValues = new List<string>();
+            var optionIds = new List<int>();
             foreach (var condition in conditions)
-            {
-                foreach (var value in AskValues(condition))
-                {
-                    propertyNames.Add(condition.Name);
-                    propertyValues.Add(value);
-                }
-            }
+                optionIds.AddRange(AskOptionIds(condition));
 
             // Срок спрашиваем последним: он относится к категории, заданной условиями выше.
             int days = Prompt.Integer(
@@ -27,19 +20,15 @@ namespace RulesConstructorForPatent.ConsoleUi
                 min: 0,
                 max: 3650);
 
-            return new ProfileSurveyAnswers
-            {
-                Days = days,
-                PropertyNames = propertyNames,
-                PropertyValues = propertyValues
-            };
+            return new ProfileSurveyAnswers { Days = days, OptionIds = optionIds };
         }
 
-        // Несколько выбранных значений одного условия объединяются через «или».
-        private static List<string> AskValues(ProfileCondition condition)
+        // Несколько выбранных вариантов одного условия объединяются через «или».
+        private static IEnumerable<int> AskOptionIds(ProfileCondition condition)
         {
-            var chosenIndexes = Prompt.ChooseMany(condition.Name, condition.Values, "любое значение");
-            return chosenIndexes.Select(index => condition.Values[index]).ToList();
+            var values = condition.Options.Select(option => option.Value).ToList();
+            var chosenIndexes = Prompt.ChooseMany(condition.Name, values, "любое значение");
+            return chosenIndexes.Select(index => condition.Options[index].Id);
         }
     }
 }

@@ -1,4 +1,4 @@
 ﻿namespace RulesConstructorForPatent.Services
 {
-    public record ProfileCondition(string Name, IReadOnlyList<string> Values);
+    public record ProfileCondition(string Name, IReadOnlyList<ProfileOption> Options);
 }

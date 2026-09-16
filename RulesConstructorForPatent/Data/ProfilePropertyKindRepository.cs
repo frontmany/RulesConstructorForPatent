@@ -15,5 +15,15 @@ namespace RulesConstructorForPatent.Data
                 .OrderBy(kind => kind.Id)
                 .ToList();
         }
+
+        // С отслеживанием: на эти варианты сошлётся профиль нового правила.
+        public List<ProfilePropertyOption> GetOptionsByIds(List<int> ids)
+        {
+            return m_db.ProfilePropertyOptions
+                .Include(option => option.Kind)
+                .Where(option => ids.Contains(option.Id))
+                .OrderBy(option => option.Id)
+                .ToList();
+        }
     }
 }

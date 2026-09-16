@@ -7,7 +7,7 @@
         // Срок выполнения в днях; 0 — срок не установлен.
         public int Days { get; set; }
 
-        // Условия профиля: свойства с одинаковым Name объединяются через «или», с разными — через «и».
-        public List<ProfileProperty> Properties { get; set; } = [];
+        // Выбранные варианты условий: варианты одного вида объединяются через «или», разных видов — через «и».
+        public List<ProfilePropertyOption> Options { get; set; } = [];
     }
 }

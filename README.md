@@ -40,7 +40,7 @@ RulesConstructorForPatent/
 
 ## База данных
 
-Справочник условий — таблицы `ProfilePropertyKinds` (виды условий) и `ProfilePropertyOptions` (их варианты).
+Справочник условий — таблицы `ProfilePropertyKinds` (виды условий) и `ProfilePropertyOptions` (их варианты). Профиль ссылается на выбранные варианты через `ProfileOptions (ProfileId, OptionId)`: переименование варианта сразу видно во всех правилах, а вариант, который используют правила, удалить нельзя.
 
 Зависимости хранятся в таблице `RequiredAccomplishedRules (RuleId, RequiredRuleId)`. Связи удаляются вместе с зависимым правилом, а правило, от которого зависят другие, удалить нельзя.
 

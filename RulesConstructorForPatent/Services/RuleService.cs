@@ -18,7 +18,9 @@ namespace RulesConstructorForPatent.Services
         public List<ProfileCondition> GetProfileConditions()
         {
             return m_unitOfWork.ProfilePropertyKinds.GetAll()
-                .Select(kind => new ProfileCondition(kind.Name, kind.Options.Select(option => option.Value).ToList()))
+                .Select(kind => new ProfileCondition(
+                    kind.Name,
+                    kind.Options.Select(option => new ProfileOption(option.Id, option.Value)).ToList()))
                 .ToList();
         }
 
@@ -31,10 +33,12 @@ namespace RulesConstructorForPatent.Services
             List<string> organizationAddresses,
             List<int>? requiredRuleIds,
             List<int> profileDays,
-            List<List<string>> profilePropertyNames,
-            List<List<string>> profilePropertyValues)
+            List<List<int>> profileOptionIds)
         {
             var requiredAccomplishedRules = LoadRequiredRules(requiredRuleIds);
+            var profileOptions = profileOptionIds
+                .Select(optionIds => m_unitOfWork.ProfilePropertyKinds.GetOptionsByIds(optionIds))
+                .ToList();
             var ruleBuilder = new RuleBuilder();
             var profileFactory = new ProfileFactory();
 
@@ -43,7 +47,7 @@ namespace RulesConstructorForPatent.Services
                 guidanceDescription, refusal,
                 organizationNames, organizationAddresses,
                 requiredAccomplishedRules,
-                profileDays, profilePropertyNames, profilePropertyValues,
+                profileDays, profileOptions,
                 ruleBuilder, profileFactory);
 
             m_unitOfWork.Rules.Add(rule);
@@ -84,9 +88,11 @@ namespace RulesConstructorForPatent.Services
                 rule.Profiles
                     .Select(profile => new ProfileDetails(
                         profile.Days,
-                        profile.Properties
-                            .GroupBy(property => property.Name)
-                            .Select(group => new ProfileCondition(group.Key, group.Select(property => property.Value).ToList()))
+                        profile.Options
+                            .GroupBy(option => option.Kind.Name)
+                            .Select(group => new ProfileCondition(
+                                group.Key,
+                                group.Select(option => new ProfileOption(option.Id, option.Value)).ToList()))
                             .ToList()))
                     .ToList());
         }

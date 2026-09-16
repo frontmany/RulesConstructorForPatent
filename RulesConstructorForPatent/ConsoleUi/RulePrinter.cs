@@ -28,7 +28,7 @@ namespace RulesConstructorForPatent.ConsoleUi
                     Screen.Hint("  Без условий — подходит всем мигрантам");
 
                 foreach (var condition in profile.Conditions)
-                    Console.WriteLine($"    {condition.Name}: {JoinWithOr(condition.Values)}");
+                    Console.WriteLine($"    {condition.Name}: {JoinWithOr(condition.Options.Select(option => option.Value))}");
             }
         }
 

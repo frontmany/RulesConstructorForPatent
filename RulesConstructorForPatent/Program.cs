@@ -27,7 +27,7 @@ namespace RulesConstructorForPatent
                 answers.GuidanceDescription, answers.Refusal,
                 answers.OrganizationNames, answers.OrganizationAddresses,
                 answers.RequiredRuleIds,
-                answers.ProfileDays, answers.ProfilePropertyNames, answers.ProfilePropertyValues);
+                answers.ProfileDays, answers.ProfileOptionIds);
 
             RulePrinter.Print(rule);
 
