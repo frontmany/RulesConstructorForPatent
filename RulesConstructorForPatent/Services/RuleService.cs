@@ -3,10 +3,9 @@ using RulesConstructorForPatent.Entities;
 
 namespace RulesConstructorForPatent.Services
 {
-    public class RuleService(IUnitOfWork unitOfWork, RuleDirector director)
+    public class RuleService(IUnitOfWork unitOfWork)
     {
         private readonly IUnitOfWork m_unitOfWork = unitOfWork;
-        private readonly RuleDirector m_director = director;
 
         public List<RuleSummary> GetAllRules()
         {
@@ -37,10 +36,11 @@ namespace RulesConstructorForPatent.Services
         {
             var requiredAccomplishedRules = LoadRequiredRules(requiredRuleIds);
             var profileOptions = LoadProfileOptions(profileOptionIds);
+            var director = new RuleDirector();
             var ruleBuilder = new RuleBuilder();
             var profileFactory = new ProfileFactory();
 
-            var rule = m_director.Construct(
+            var rule = director.Construct(
                 ruleName, targetDocumentNames,
                 guidanceDescription, refusal,
                 organizationNames, organizationAddresses,

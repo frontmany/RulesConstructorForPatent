@@ -17,7 +17,7 @@ namespace RulesConstructorForPatent
             using var dbContext = new RuleDbContext();
             dbContext.Database.EnsureCreated();
 
-            var ruleService = new RuleService(new UnitOfWork(dbContext), new RuleDirector());
+            var ruleService = new RuleService(new UnitOfWork(dbContext));
             var conditions = ruleService.GetProfileConditions();
             if (conditions.Count == 0)
             {
