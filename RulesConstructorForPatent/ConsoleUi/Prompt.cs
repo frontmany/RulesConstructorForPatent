@@ -55,7 +55,7 @@
         // emptyAnswerMeaning — что означает пустой ответ; null, если выбрать нужно хотя бы один пункт.
         public static List<int> ChooseMany(string label, IReadOnlyList<string> options, string? emptyAnswerMeaning)
         {
-            Screen.ShowLabel(label);
+            Screen.Label(label);
             for (int i = 0; i < options.Count; i++)
             {
                 Screen.Write($"  {i + 1,3}  ", ConsoleColor.Cyan);
@@ -84,7 +84,7 @@
 
         private static void Ask(string label, string hint)
         {
-            Screen.ShowLabel(label);
+            Screen.Label(label);
             PrintHint(hint);
         }
 
@@ -104,10 +104,9 @@
             return ReadLine();
         }
 
-        // null от Console.ReadLine означает, что ввод закончился (например, файл с ответами исчерпан).
         private static string ReadLine()
         {
-            return (Console.ReadLine() ?? throw new EndOfStreamException()).Trim();
+            return Console.ReadLine()!.Trim();
         }
 
         private static bool TryParseNumbers(string answer, int optionCount, out List<int> indexes)

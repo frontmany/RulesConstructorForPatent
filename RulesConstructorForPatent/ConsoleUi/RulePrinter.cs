@@ -9,7 +9,7 @@ namespace RulesConstructorForPatent.ConsoleUi
 
         public static void Print(Rule rule)
         {
-            Screen.ShowTitle($"Правило #{rule.Id} сохранено");
+            Screen.Title($"Правило #{rule.Id} сохранено");
 
             PrintField("Название", [rule.Name]);
             PrintField("Целевой документ", rule.TargetDocuments.Select(document => document.Name));
@@ -23,12 +23,12 @@ namespace RulesConstructorForPatent.ConsoleUi
 
             PrintField("Зависит от", rule.RequiredAccomplishedRules?.Select(required => $"#{required.Id} {required.Name}") ?? []);
 
-            Screen.ShowLabel("Профили");
+            Screen.Label("Профили");
             Screen.Hint("Правило действует, если мигрант подходит хотя бы под один");
             int number = 1;
             foreach (var profile in rule.Profiles)
             {
-                Screen.ShowSubHeader($"Профиль {number++}, {FormatDays(profile.Days)}");
+                Screen.SubHeader($"Профиль {number++}, {FormatDays(profile.Days)}");
 
                 if (profile.Properties.Count == 0)
                     Screen.Hint("  Без условий — подходит всем мигрантам");
@@ -38,7 +38,6 @@ namespace RulesConstructorForPatent.ConsoleUi
             }
         }
 
-        // Первое значение печатается рядом с подписью, остальные — под ним, с тем же отступом.
         private static void PrintField(string label, IEnumerable<string> values)
         {
             var lines = values.Where(value => value.Length > 0).ToList();

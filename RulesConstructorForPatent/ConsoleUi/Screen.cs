@@ -5,7 +5,7 @@
         private const int Width = 64;
         private const string Indent = "  ";
 
-        public static void ShowBanner()
+        public static void Banner()
         {
             WriteLine(new string('═', Width), ConsoleColor.Cyan);
             WriteLine(Indent + "КОНСТРУКТОР ПРАВИЛ", ConsoleColor.Cyan);
@@ -13,7 +13,7 @@
             Hint("Серым показаны подсказки и примеры");
         }
 
-        public static void ShowTitle(string text)
+        public static void Title(string text)
         {
             Console.WriteLine();
             Console.WriteLine();
@@ -22,7 +22,7 @@
             WriteLine(new string('═', Width), ConsoleColor.Green);
         }
 
-        public static void ShowStep(int number, int count, string title)
+        public static void Step(int number, int count, string title)
         {
             string header = $"── Шаг {number} из {count}: {title} ";
 
@@ -31,32 +31,28 @@
             WriteLine(header.PadRight(Width, '─'), ConsoleColor.Yellow);
         }
 
-        public static void ShowSubHeader(string text)
+        public static void SubHeader(string text)
         {
             Console.WriteLine();
             WriteLine(Indent + text, ConsoleColor.Cyan);
         }
 
-        public static void ShowLabel(string text)
+        public static void Label(string text)
         {
             Console.WriteLine();
             WriteLine(Indent + text, ConsoleColor.White);
         }
 
-        public static void ShowAsHint(string text) => WriteLine(Indent + text, ConsoleColor.DarkGray);
+        public static void Hint(string text) => WriteLine(Indent + text, ConsoleColor.DarkGray);
 
-        public static void ShowAsProgress(string text) => WriteLine(Indent + text, ConsoleColor.DarkCyan);
+        public static void Progress(string text) => WriteLine(Indent + text, ConsoleColor.DarkCyan);
 
-        public static void ShowAsWarning(string text) => WriteLine(Indent + text, ConsoleColor.DarkYellow);
+        public static void Warning(string text) => WriteLine(Indent + text, ConsoleColor.DarkYellow);
 
-        public static void ShowAsError(string text) => WriteLine(Indent + text, ConsoleColor.Red);
+        public static void Error(string text) => WriteLine(Indent + text, ConsoleColor.Red);
 
         public static void WaitForExit()
         {
-            // При перенаправленном вводе (например, из файла) клавишу ждать неоткуда.
-            if (Console.IsInputRedirected)
-                return;
-
             Console.WriteLine();
             Hint("Нажмите любую клавишу, чтобы закрыть окно");
             Console.ReadKey(intercept: true);

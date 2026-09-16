@@ -9,7 +9,7 @@ namespace RulesConstructorForPatent.ConsoleUi
 
         public static RuleSurveyAnswers Ask(RuleService ruleService)
         {
-            Screen.ShowStep(1, StepCount, "Что нужно получить");
+            Screen.Step(1, StepCount, "Что нужно получить");
             string ruleName = Prompt.Text(
                 "Название правила",
                 "Например: Получение ИНН");
@@ -20,8 +20,7 @@ namespace RulesConstructorForPatent.ConsoleUi
                 "Документ, который можно получить при выполнении правила\n" +
                 "Например: ИНН");
 
-            // Руководство целиком: что сделать, куда обращаться и что стоит попробовать при отказе.
-            Screen.ShowStep(2, StepCount, "Руководство");
+            Screen.Step(2, StepCount, "Руководство");
             string guidanceDescription = Prompt.Text(
                 "Что нужно сделать",
                 "Например: обратиться в инспекцию ФНС");
@@ -32,10 +31,10 @@ namespace RulesConstructorForPatent.ConsoleUi
                 "Enter — пропустить",
                 isRequired: false);
 
-            Screen.ShowStep(3, StepCount, "Зависимость от других правил");
+            Screen.Step(3, StepCount, "Зависимость от других правил");
             var requiredRuleIds = AskRequiredRuleIds(ruleService);
 
-            Screen.ShowStep(4, StepCount, "Для кого и в какой срок");
+            Screen.Step(4, StepCount, "Для кого и в какой срок");
             Screen.Hint("Профиль — категория мигрантов и срок для неё. Правило действует,");
             Screen.Hint("если мигрант подходит хотя бы под один профиль");
 
@@ -73,7 +72,6 @@ namespace RulesConstructorForPatent.ConsoleUi
             };
         }
 
-        // Хотя бы одна организация обязательна, после каждой — вопрос, добавить ли ещё, как у профилей.
         // Организации вводятся по одной, поэтому у каждого названия есть свой адрес.
         private static (List<string> Names, List<string> Addresses) AskOrganizations()
         {

@@ -13,7 +13,7 @@ namespace RulesConstructorForPatent
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
 
-            Screen.ShowBanner();
+            Screen.Banner();
 
             try
             {
@@ -34,11 +34,6 @@ namespace RulesConstructorForPatent
                     answers.ProfilePropertyNames, answers.ProfilePropertyValues);
 
                 RulePrinter.Print(rule);
-            }
-            catch (EndOfStreamException)
-            {
-                Console.WriteLine();
-                Screen.Error("Ввод прервался до конца опроса — правило не сохранено");
             }
             catch (DbUpdateException exception)
             {

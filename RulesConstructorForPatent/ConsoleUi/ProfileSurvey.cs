@@ -7,7 +7,7 @@ namespace RulesConstructorForPatent.ConsoleUi
     {
         public static ProfileSurveyAnswers Ask(int profileNumber)
         {
-            Screen.ShowSubHeader($"Профиль {profileNumber}");
+            Screen.SubHeader($"Профиль {profileNumber}");
 
             var entryPurposes = AskValues(ProfilePropertyCatalog.EntryPurpose, "любая цель");
             var citizenships = AskValues(ProfilePropertyCatalog.Citizenship, "любое гражданство");
