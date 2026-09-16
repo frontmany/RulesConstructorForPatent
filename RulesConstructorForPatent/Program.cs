@@ -11,14 +11,9 @@ namespace RulesConstructorForPatent
         static void Main()
         {
             Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.Unicode;
 
-            // Консоль Windows может читать ввод в кодировке без кириллицы (например, 850),
-            // и тогда русские буквы приходят как «?». В режиме UTF-16 .NET получает символы
-            // напрямую. Для ввода из файла кодировку не трогаем.
-            if (OperatingSystem.IsWindows() && !Console.IsInputRedirected)
-                Console.InputEncoding = Encoding.Unicode;
-
-            Screen.Banner();
+            Screen.ShowBanner();
 
             try
             {
@@ -29,7 +24,7 @@ namespace RulesConstructorForPatent
                 var answers = RuleSurvey.Ask(ruleService);
 
                 Console.WriteLine();
-                Screen.Progress("Сохраняем правило…");
+                Screen.Progress("Сохраняем правило...");
                 var rule = ruleService.CreateRule(
                     answers.RuleName, answers.TargetDocumentNames,
                     answers.GuidanceDescription, answers.Refusal,

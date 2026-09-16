@@ -9,7 +9,7 @@ namespace RulesConstructorForPatent.ConsoleUi
 
         public static RuleSurveyAnswers Ask(RuleService ruleService)
         {
-            Screen.Step(1, StepCount, "Что нужно получить");
+            Screen.ShowStep(1, StepCount, "Что нужно получить");
             string ruleName = Prompt.Text(
                 "Название правила",
                 "Например: Получение ИНН");
@@ -21,7 +21,7 @@ namespace RulesConstructorForPatent.ConsoleUi
                 "Например: ИНН");
 
             // Руководство целиком: что сделать, куда обращаться и что стоит попробовать при отказе.
-            Screen.Step(2, StepCount, "Руководство");
+            Screen.ShowStep(2, StepCount, "Руководство");
             string guidanceDescription = Prompt.Text(
                 "Что нужно сделать",
                 "Например: обратиться в инспекцию ФНС");
@@ -32,10 +32,10 @@ namespace RulesConstructorForPatent.ConsoleUi
                 "Enter — пропустить",
                 isRequired: false);
 
-            Screen.Step(3, StepCount, "Зависимость от других правил");
+            Screen.ShowStep(3, StepCount, "Зависимость от других правил");
             var requiredRuleIds = AskRequiredRuleIds(ruleService);
 
-            Screen.Step(4, StepCount, "Для кого и в какой срок");
+            Screen.ShowStep(4, StepCount, "Для кого и в какой срок");
             Screen.Hint("Профиль — категория мигрантов и срок для неё. Правило действует,");
             Screen.Hint("если мигрант подходит хотя бы под один профиль");
 
@@ -106,7 +106,7 @@ namespace RulesConstructorForPatent.ConsoleUi
             if (!dependsOnOtherRules)
                 return null;
 
-            Screen.Progress("Загружаем правила из базы…");
+            Screen.Progress("Загружаем правила из базы...");
             var existingRules = ruleService.GetAllRules();
             if (existingRules.Count == 0)
             {

@@ -39,7 +39,7 @@
             while (true)
             {
                 Screen.Write($"  {question} (д/н) ", ConsoleColor.White);
-                Screen.Write("› ", ConsoleColor.Cyan);
+                Screen.Write("> ", ConsoleColor.Cyan);
 
                 string answer = ReadLine().ToLowerInvariant();
                 if (answer is "д" or "да")
@@ -55,7 +55,7 @@
         // emptyAnswerMeaning — что означает пустой ответ; null, если выбрать нужно хотя бы один пункт.
         public static List<int> ChooseMany(string label, IReadOnlyList<string> options, string? emptyAnswerMeaning)
         {
-            Screen.Label(label);
+            Screen.ShowLabel(label);
             for (int i = 0; i < options.Count; i++)
             {
                 Screen.Write($"  {i + 1,3}  ", ConsoleColor.Cyan);
@@ -84,7 +84,7 @@
 
         private static void Ask(string label, string hint)
         {
-            Screen.Label(label);
+            Screen.ShowLabel(label);
             PrintHint(hint);
         }
 
@@ -100,7 +100,7 @@
 
         private static string ReadAnswer()
         {
-            Screen.Write("  › ", ConsoleColor.Cyan);
+            Screen.Write("  > ", ConsoleColor.Cyan);
             return ReadLine();
         }
 
