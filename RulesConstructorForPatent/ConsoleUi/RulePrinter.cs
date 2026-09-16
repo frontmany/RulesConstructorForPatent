@@ -1,4 +1,4 @@
-﻿using RulesConstructorForPatent.Entities;
+﻿using RulesConstructorForPatent.Services;
 
 namespace RulesConstructorForPatent.ConsoleUi
 {
@@ -6,21 +6,16 @@ namespace RulesConstructorForPatent.ConsoleUi
     {
         private const int LabelWidth = 34;
 
-        public static void Print(Rule rule)
+        public static void Print(RuleDetails rule)
         {
             Screen.Title($"Правило #{rule.Id} сохранено");
 
             PrintField("Название", [rule.Name]);
-            PrintField("Целевой документ", rule.TargetDocuments.Select(document => document.Name));
-
-            if (rule.Guidance != null)
-            {
-                PrintField("Что нужно сделать", [rule.Guidance.Description]);
-                PrintField("Организации", rule.Guidance.Organizations.Select(FormatOrganization));
-                PrintField("Что стоит попробовать при отказе", [rule.Guidance.Refusal]);
-            }
-
-            PrintField("Зависит от", rule.RequiredAccomplishedRules?.Select(required => $"#{required.Id} {required.Name}") ?? []);
+            PrintField("Целевой документ", rule.TargetDocumentNames);
+            PrintField("Что нужно сделать", [rule.GuidanceDescription]);
+            PrintField("Организации", rule.Organizations.Select(FormatOrganization));
+            PrintField("Что стоит попробовать при отказе", [rule.Refusal]);
+            PrintField("Зависит от", rule.RequiredRules.Select(required => $"#{required.Id} {required.Name}"));
 
             Screen.Label("Профили");
             Screen.Hint("Правило действует, если мигрант подходит хотя бы под один");
@@ -29,11 +24,11 @@ namespace RulesConstructorForPatent.ConsoleUi
             {
                 Screen.SubHeader($"Профиль {number++}, {FormatDays(profile.Days)}");
 
-                if (profile.Properties.Count == 0)
+                if (profile.Conditions.Count == 0)
                     Screen.Hint("  Без условий — подходит всем мигрантам");
 
-                foreach (var condition in profile.Properties.GroupBy(property => property.Name))
-                    Console.WriteLine($"    {condition.Key}: {JoinWithOr(condition.Select(property => property.Value))}");
+                foreach (var condition in profile.Conditions)
+                    Console.WriteLine($"    {condition.Name}: {JoinWithOr(condition.Values)}");
             }
         }
 
@@ -49,7 +44,7 @@ namespace RulesConstructorForPatent.ConsoleUi
                 Console.WriteLine("  " + new string(' ', LabelWidth) + line);
         }
 
-        private static string FormatOrganization(Organization organization)
+        private static string FormatOrganization(OrganizationDetails organization)
         {
             return organization.Address.Length == 0
                 ? organization.Name

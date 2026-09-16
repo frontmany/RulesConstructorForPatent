@@ -22,7 +22,7 @@ namespace RulesConstructorForPatent.Services
                 .ToList();
         }
 
-        public Rule CreateRule(
+        public RuleDetails CreateRule(
             string ruleName,
             List<string> targetDocumentNames,
             string guidanceDescription,
@@ -53,7 +53,7 @@ namespace RulesConstructorForPatent.Services
                 transaction.Commit();
             }
 
-            return rule;
+            return ToDetails(rule);
         }
 
         // Пользователь выбирает зависимости по Id, а билдеру нужны сами правила из базы.
@@ -69,6 +69,30 @@ namespace RulesConstructorForPatent.Services
                 throw new InvalidOperationException($"В базе нет правил с номерами: {string.Join(", ", missingIds)}");
 
             return requiredRules;
+        }
+
+        private static RuleDetails ToDetails(Rule rule)
+        {
+            return new RuleDetails(
+                rule.Id,
+                rule.Name,
+                rule.TargetDocuments.Select(document => document.Name).ToList(),
+                rule.Guidance.Description,
+                rule.Guidance.Refusal,
+                rule.Guidance.Organizations
+                    .Select(organization => new OrganizationDetails(organization.Name, organization.Address))
+                    .ToList(),
+                rule.RequiredAccomplishedRules?
+                    .Select(required => new RuleSummary(required.Id, required.Name))
+                    .ToList() ?? [],
+                rule.Profiles
+                    .Select(profile => new ProfileDetails(
+                        profile.Days,
+                        profile.Properties
+                            .GroupBy(property => property.Name)
+                            .Select(group => new ProfileCondition(group.Key, group.Select(property => property.Value).ToList()))
+                            .ToList()))
+                    .ToList());
         }
     }
 }
