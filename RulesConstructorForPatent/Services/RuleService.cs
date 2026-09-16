@@ -8,9 +8,11 @@ namespace RulesConstructorForPatent.Services
         private readonly IUnitOfWork m_unitOfWork = unitOfWork;
         private readonly RuleDirector m_director = director;
 
-        public List<Rule> GetAllRules()
+        public List<RuleSummary> GetAllRules()
         {
-            return m_unitOfWork.Rules.GetAll();
+            return m_unitOfWork.Rules.GetAll()
+                .Select(rule => new RuleSummary(rule.Id, rule.Name))
+                .ToList();
         }
 
         public Rule CreateRule(
